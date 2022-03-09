@@ -53,3 +53,15 @@
   background-color: #060b06;
 }
 
+.forgot-password{
+  font-size: 17px;
+  margin-bottom: 32px;
+  text-decoration: none;
+  color: black;
+}
+
+.admin-login{
+  font-size: 17px;
+ color: black;
+  text-decoration: none;
+}

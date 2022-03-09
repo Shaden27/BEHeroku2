@@ -6,14 +6,17 @@ import '../CSS/DoctorLogin.css'
 
 
 function DoctorLogin() {
+    const [emailmsg, setEmailmsg]=useState(false)
+    const [passwordmsg, setPasswordmsg]=useState(false)
+    const [emailflag, setEmailFlag]=useState(false)
+    const [passflag, setPassFlag]=useState(false)
+  
     const navigate=useNavigate()
     const initialValues={
         Username:"",
         Email:"",
         Password:""
     }
-
-    
     
     const onSubmit=(values)=>{
         console.log("Form data", values);
@@ -28,30 +31,38 @@ function DoctorLogin() {
         })
         .then(res=>{
             console.log(res)
-            // if (res.ok){
-            //     console.log('flag set to true');
-            //     navigate('DoctorSidebar')
-                
-            // }else{
-            //     console.log("Some Problem Occured")
-            // }
             return res.json()
             
         }).then(data=>{
             console.log(data)
             if(data['msg']=='Doctor Authenticated'){
-                navigate('DoctorSidebar')
+                navigate('DoctorDashboard')
                 localStorage.setItem('id',"d"+data['id'])   
             }else{
                 console.log("Some Problem Occured")
+                if(data['msg']=='Invalid Email'){
+                    setEmailmsg(true)
+                    setEmailFlag(true)
+                    setTimeout(() => {
+                        setEmailFlag(false)
+                    }, 5000)
+                }
+                if(data['msg']=='Invalid Password'){
+                    setPasswordmsg(true)
+                    setPassFlag(true)
+                    setTimeout(() => {
+                        setPassFlag(false)
+                    }, 5000)
+                }
             }
-        }
-           
+        }  
             )
         .catch(err=>{
             console.log(err)
         })
     }
+
+
     
     const validate=(values)=>{
         let errors={}
@@ -64,11 +75,11 @@ function DoctorLogin() {
         }else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.Email)){
             errors.Email="Invalid Format"
         }
-    
+        
         if(!values.Password){
             errors.Password="Required"
         }
-    
+       
         return errors
     }
     
@@ -98,6 +109,7 @@ function DoctorLogin() {
                value={formik.values.Email}  onBlur={formik.handleBlur}/>
                <label htmlFor="floatingInput">Email Address</label>
                {formik.touched.Email && formik.errors.Email ? (<div className='error_msg'>{formik.errors.Email}</div>):null}
+               {emailflag ? (<div className='error_msg'>Incorrect Email</div>):null}
              </div>
          
              <div className="form-floating">
@@ -106,6 +118,7 @@ function DoctorLogin() {
                 value={formik.values.Password}  onBlur={formik.handleBlur}/>
                <label htmlFor="floatingPassword">Password</label>
                {formik.touched.Password && formik.errors.Password ? (<div className='error_msg'>{formik.errors.Password}</div>):null}
+               {passflag ? (<div className='error_msg'>Incorrect Password</div>):null}
              </div>
          
              
@@ -113,7 +126,9 @@ function DoctorLogin() {
              <p className="mt-5 mb-3 text-muted">&copy; 2022-2024</p>
            </form>
          </main>
-            <Link to="/adminLogin">Login as Admin</Link>
+         <Link to='/forgotPassword' className='forgot-password'>Forgot Password</Link>
+         <br></br>
+            <Link to="/adminLogin" className='admin-login'>Login as Admin</Link>
            </div>
     
   )

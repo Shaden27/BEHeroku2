@@ -32,7 +32,7 @@ function DoctorSidebar() {
           <div className='sidebar'>
             <Link to="#"  className='menu-bars'></Link>
       <FaIcons.FaBars onClick={showSidebar}></FaIcons.FaBars>
-      {/* <h2 className='heading'>Welcome to Prime </h2> */}
+        <h2 className='heading'>Welcome to Prime </h2>
           </div>
           <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
             <ul className='nav-menu-items' onClick={showSidebar}>
