@@ -55,8 +55,7 @@ function DoctorLogin() {
                     }, 5000)
                 }
             }
-        }  
-            )
+        })
         .catch(err=>{
             console.log(err)
         })

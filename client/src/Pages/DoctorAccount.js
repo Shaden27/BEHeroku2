@@ -2,7 +2,7 @@
 import React,{useState,useEffect} from 'react'
 import {useNavigate,Navigate,Link} from 'react-router-dom'
 
-function Account() {
+function DoctorAccount() {
     const [flag, setFlag]=useState(false)
     const navigate=useNavigate()
 
@@ -22,10 +22,20 @@ const handleLogout=()=>{
 
 }
 
+const handleReset=()=>{
+  console.log("Resetting password")
+  navigate('/resetPassword')
+
+}
+
   return (
     <div>
         {flag ? (<div>
             <h2>This is the Account page</h2>
+            
+            <button className='btn btn-secondary btn-large' onClick={handleReset}>Reset Password</button>
+            <br></br>
+            <br></br>
             <button className='btn btn-primary btn-large' onClick={handleLogout}>Logout</button>
             </div>):
         (<div>{<Link to='/'>Go back to Login</Link>}</div>)}
@@ -34,4 +44,4 @@ const handleLogout=()=>{
   )
 }
 
-export default Account
+export default DoctorAccount

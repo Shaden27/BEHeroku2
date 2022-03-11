@@ -9,7 +9,7 @@ import * as MdIcons from 'react-icons/md'
 export const SidebarData=[
     {
         title:'Account',
-        path:'/Account',
+        path:'/doctorAccount',
         icon:<RiIcons.RiAccountCircleFill/>,
         className:'nav-text'
     },

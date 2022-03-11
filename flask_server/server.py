@@ -23,17 +23,17 @@ cred = credentials.Certificate('./private_key.json')
 firebase_admin.initialize_app(cred)
 db=firestore.client()
 
-doc1={
-    u"Name":u"Tatya Vinchu",
-    u"Contact":27983454,
-    u"Email":u"Tatya@123.com",
-    u"Password":u"Tatya123",
-    u"Doctor_id":1
-}
+# doc1={
+#     u"Name":u"Tatya Vinchu",
+#     u"Contact":27983454,
+#     u"Email":u"Tatya@123.com",
+#     u"Password":u"Tatya123",
+#     u"Doctor_id":1
+# }
 
-db.collection(u'Doctors').document(u'd1').set(doc1)
+# db.collection(u'Doctors').document(u'd1').set(doc1)
 
-db.collection(u'Counter').document(u'count').set({u"doctorCounter":1})
+# db.collection(u'Counter').document(u'count').set({u"doctorCounter":1})
 
 
 
@@ -46,7 +46,7 @@ def getDocInfo():
         Username=request_data["Username"]
         Email=request_data["Email"]
         Password=request_data["Password"]
-        print(Username, Password, Email)
+        print(Username,Email,Password)
 
         count_ref=db.collection(u'Counter').document(u'count')
         countDict=count_ref.get()
@@ -134,7 +134,41 @@ def forgotPassword():
     except Exception as e:
         print(e)
 
-    
+@app.route('/resetPassword', methods=["POST", "GET"])
+def resetPassword():
+    try:
+        request_data=json.loads(request.data)
+        print(request_data)
+        oldPassword=request_data[0]["oldPassword"]
+        newPassword=request_data[0]["newPassword"]
+        verifyPassword=request_data[0]["verifyPassword"]
+        doc_id=request_data[1]["id"]
+
+        print(oldPassword, newPassword, verifyPassword,doc_id )
+
+        doc_ref=db.collection(u'Doctors').document(doc_id)
+        doctor=doc_ref.get()
+
+        if doctor.exists:
+            if doctor.to_dict()["Password"]==oldPassword:
+                db.collection(u'Doctors').document(doc_id).update({"Password":newPassword})
+                return{
+                    "msg":"Password updated successfully"
+                }
+
+            else:
+                return{
+                    "msg":"Some error occured please try again"
+                }
+
+        return{
+            "msg":"Something went wrong"
+        }
+        
+       
+    except Exception as e:
+        print(e)
+   
 
 
 @app.route("/Adminpost", methods=["POST", "GET"])
