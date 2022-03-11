@@ -97,19 +97,19 @@ def getDocInfo():
 def forgotPassword():
     try:
         request_data=json.loads(request.data)
-        doc_id=request_data[1]["id"]
         email=request_data[0]["Email"]
-        print(email, doc_id)
-
-        doc_ref=db.collection(u'Doctors').document(doc_id)
-        doctor=doc_ref.get()
+        print(email)
+        doc_ref=db.collection(u'Doctors').where(u'Email',u'==',email)
+        doctor=doc_ref.get()[0]
 
         if doctor.exists:
             doc_email=doctor.to_dict()["Email"]
+            doc_id=doctor.to_dict()["Doctor_id"]
+            doc_id="d"+str(doc_id)
             print(doc_email)
             if doc_email==email:
                 print("All good")
-                new_pass=''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits+str(["#","@","$","*","&","%"]), k=10))
+                new_pass=''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits, k=10))
 
                 msg = Message("Password Reset",
                   sender="befinalproject420@gmail.com",

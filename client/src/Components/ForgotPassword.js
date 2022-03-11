@@ -21,12 +21,12 @@ function ForgotPassword() {
     }
 
 const onSubmit=(values)=>{
-    const id=localStorage.getItem('id')
-    console.log(id)
-    const id_obj={
-        "id":id
-    }
-    const data=[values,id_obj]
+    // const id=localStorage.getItem('id')
+    // console.log(id)
+    // const id_obj={
+    //     "id":id
+    // }
+    const data=[values]
     console.log(JSON.stringify(data))
     fetch("/forgotPassword",{
         method:"POST",
