@@ -14,7 +14,7 @@ function ResetPassword() {
     }
 
     useEffect(()=>{
-        if(localStorage.getItem('id')){
+        if(localStorage.getItem('Doc_id')){
             console.log("Local storage exists")
             setFlagForLocalStorage(true)
           }

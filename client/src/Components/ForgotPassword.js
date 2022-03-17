@@ -1,8 +1,15 @@
 import React,{useState,useEffect} from 'react'
 import {useFormik} from 'formik'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useLocation} from 'react-router-dom'
 
 function ForgotPassword() {
+   
+    
+    const [errorflag, setErrorFlag]=useState(false)
+    const [noaccountflag, setNoAccountFlag]=useState(false)
+    const {id}=useLocation().state
+
+  
     const navigate=useNavigate()
     const initialValues={
         Email:""
@@ -21,12 +28,10 @@ function ForgotPassword() {
     }
 
 const onSubmit=(values)=>{
-    // const id=localStorage.getItem('id')
-    // console.log(id)
-    // const id_obj={
-    //     "id":id
-    // }
-    const data=[values]
+    const id_obj={
+        "id":id
+    }
+    const data=[values,id_obj]
     console.log(JSON.stringify(data))
     fetch("/forgotPassword",{
         method:"POST",
@@ -39,14 +44,23 @@ const onSubmit=(values)=>{
     })
     .then(res=>{
         console.log("res",res)
-        if (res.ok){
-            navigate('/')
-        }
-    }
-        
-    )
+       return res.json()
+    })
     .then(data=>{
         console.log(data)
+        if(data["msg"]=="Otp sent Successfully"){
+        navigate("/otp", {state:{"id":id}})
+        }else{
+           if(data["msg"]=="Account Not Found"){
+                setErrorFlag(true)
+               setNoAccountFlag(true)
+                setTimeout(() => {
+                    setNoAccountFlag(false)
+                    setErrorFlag(false)
+                }, 5000)
+            }
+        }
+        
     })
     .then(err=>console.log(err))
     
@@ -69,6 +83,8 @@ const formik=useFormik({
                value={formik.values.Email}  onBlur={formik.handleBlur}/>
                <label htmlFor="floatingInput">Email Address</label>
                {formik.touched.Email && formik.errors.Email ? (<div className='error_msg'>{formik.errors.Email}</div>):null}
+               
+               {errorflag ? (<div className='error_msg'>No Account Found</div>):null}
             </div>
             <button className="w-100 btn btn-lg btn-primary" type="submit">Submit</button>
         </form> 

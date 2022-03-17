@@ -7,7 +7,7 @@ function DoctorAccount() {
     const navigate=useNavigate()
 
     useEffect(()=>{
-        if(localStorage.getItem('id')){
+        if(localStorage.getItem('Doc_id')){
               console.log("Local storage exists")
               setFlag(true)
             }
@@ -17,7 +17,7 @@ function DoctorAccount() {
 
 const handleLogout=()=>{
     console.log("Logging out")
-    localStorage.removeItem('id')
+    localStorage.removeItem('Doc_id')
     navigate('/')
 
 }

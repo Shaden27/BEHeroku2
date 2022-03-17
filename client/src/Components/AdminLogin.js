@@ -1,11 +1,16 @@
 import React,{useState,useEffect} from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import axios from "axios"
 import '../CSS/DoctorLogin.css'
 
 function AdminLogin() {
     const navigate=useNavigate()
+    const [emailmsg, setEmailmsg]=useState(false)
+    const [passwordmsg, setPasswordmsg]=useState(false)
+    const [emailflag, setEmailFlag]=useState(false)
+    const [passflag, setPassFlag]=useState(false)
+
     const initialValues={
         Username:"",
         Email:"",
@@ -14,7 +19,7 @@ function AdminLogin() {
     
     const onSubmit=(values)=>{
         console.log("Form data", values);
-        fetch("/Docpost",{
+        fetch("/Adminpost",{
             method:'POST',
             mode:'no-cors',
             headers:{
@@ -25,13 +30,32 @@ function AdminLogin() {
         })
         .then(res=>{
             console.log(res)
-            if (res.ok){
-                console.log('flag set to true');
-                
-                // navigate('Sidebar')
-                
-            }
+            return res.json()
             
+        })
+        .then(data=>{
+            if(data['msg']=='Admin Authenticated'){
+                navigate('/admindashboard')
+                localStorage.setItem("Admin_id","a"+data['id'])
+            }else{
+                console.log("Some Problem Occured")
+                console.log(data['msg'])
+                if(data['msg']=='Invalid Email'){
+                    setEmailmsg(true)
+                    setEmailFlag(true)
+                    setTimeout(() => {
+                        setEmailFlag(false)
+                    }, 5000)
+                }
+                if(data['msg']=='Invalid Password'){
+                    setPasswordmsg(true)
+                    setPassFlag(true)
+                    setTimeout(() => {
+                        setPassFlag(false)
+                    }, 5000)
+            }
+        }
+
         })
         .catch(err=>{
             console.log(err)
@@ -83,6 +107,7 @@ function AdminLogin() {
                value={formik.values.Email}  onBlur={formik.handleBlur}/>
                <label htmlFor="floatingInput">Email address</label>
                {formik.touched.Email && formik.errors.Email ? (<div className='error_msg'>{formik.errors.Email}</div>):null}
+               {emailflag ? (<div className='error_msg'>Incorrect Email</div>):null}
              </div>
          
              <div className="form-floating">
@@ -91,6 +116,7 @@ function AdminLogin() {
                 value={formik.values.Password}  onBlur={formik.handleBlur}/>
                <label htmlFor="floatingPassword">Password</label>
                {formik.touched.Password && formik.errors.Password ? (<div className='error_msg'>{formik.errors.Password}</div>):null}
+               {passflag ? (<div className='error_msg'>Incorrect Password</div>):null}
              </div>
          
              
@@ -98,6 +124,7 @@ function AdminLogin() {
              <p className="mt-5 mb-3 text-muted">&copy; 2022-2024</p>
            </form>
          </main>
+         <Link to={'/forgotPassword'} state={{id:"a"}} className='forgot-password'>Forgot Password</Link>
     </div>
   )
 }

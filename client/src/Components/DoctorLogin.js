@@ -1,11 +1,12 @@
 import React,{useState,useEffect} from 'react'
-import {useNavigate, Link} from 'react-router-dom'
+import {useNavigate, Navigate, Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import axios from "axios"
 import '../CSS/DoctorLogin.css'
 
 
-function DoctorLogin() {
+
+function DoctorLogin({navigation}) {
     const [emailmsg, setEmailmsg]=useState(false)
     const [passwordmsg, setPasswordmsg]=useState(false)
     const [emailflag, setEmailFlag]=useState(false)
@@ -37,10 +38,13 @@ function DoctorLogin() {
             console.log(data)
             if(data['msg']=='Doctor Authenticated'){
                 navigate('DoctorDashboard')
-                localStorage.setItem('id',"d"+data['id'])   
+               
+                localStorage.setItem('Doc_id',"d"+data['id']);
+                
+              
             }else{
                 console.log("Some Problem Occured")
-                if(data['msg']=='Invalid Email'){
+                if(data['msg']=='Doctor Not Found'){
                     setEmailmsg(true)
                     setEmailFlag(true)
                     setTimeout(() => {
@@ -125,7 +129,7 @@ function DoctorLogin() {
              <p className="mt-5 mb-3 text-muted">&copy; 2022-2024</p>
            </form>
          </main>
-         <Link to='/forgotPassword' className='forgot-password'>Forgot Password</Link>
+         <Link to={"/forgotPassword"} state={{id:"d"}} className='forgot-password'>Forgot Password</Link>
          <br></br>
             <Link to="/adminLogin" className='admin-login'>Login as Admin</Link>
            </div>

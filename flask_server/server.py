@@ -35,6 +35,17 @@ db=firestore.client()
 
 # db.collection(u'Counter').document(u'count').set({u"doctorCounter":1})
 
+# admin={
+#     u"Admin_Name":u"Deenanath Mangu",
+#     u"Admin_Email":u"Deenanath@gmail.com",
+#     u"Admin_Contact":123456789,
+#     u"Admin_Password":"Deenu#1234",
+#     u"Admin_Id":1
+
+# }
+
+# db.collection(u'Admin').document(u'a1').set(admin)
+
 
 
 @app.route("/Docpost", methods=["POST", "GET"])
@@ -48,44 +59,32 @@ def getDocInfo():
         Password=request_data["Password"]
         print(Username,Email,Password)
 
-        count_ref=db.collection(u'Counter').document(u'count')
-        countDict=count_ref.get()
-        count=countDict.to_dict()["doctorCounter"]
-        print("Count",count)
+        doc_ref=db.collection(u'Doctors').where(u'Email',u'==',Email)
+        print(doc_ref)
         
-        for i in range(count):
-            doc_id="d"+str(i+1)
-            print("Doc_id",doc_id)
-            doc_ref=db.collection(u'Doctors').document(doc_id)
-            doctor=doc_ref.get()
-            print("Doctor obj",doctor)
+        if doc_ref.get()==[]:
+            return{
+                    'msg':"Doctor Not Found"
+            }
 
-            if doctor.exists:
+        doctor=doc_ref.get()[0]
+        print(doctor)
+        
+        if doctor.exists:
+            doc_id=doctor.to_dict()["Doctor_id"]
+            if doctor.to_dict()["Email"]==Email and doctor.to_dict()["Password"]==Password:
                 print(doctor.to_dict()["Email"])
-                print(Email)
-                if doctor.to_dict()["Email"]==Email and doctor.to_dict()["Password"]==Password:
-                    print(doctor.to_dict()["Email"])
-                    return {
-                    'msg':'Doctor Authenticated',
-                    'id':doctor.to_dict()["Doctor_id"]
-                    }
-
-                else:
-                    if doctor.to_dict()["Email"]!=Email: 
-                        return{
-                            'msg':"Invalid Email"
-                        }
-
-                    elif doctor.to_dict()["Email"]!=Password:
-                         return{
-                            'msg':"Invalid Password"
-                        }
-
-            else:
                 return {
-                    'msg':"Doctor not Found"
+                'msg':'Doctor Authenticated',
+                'id':doc_id
                 }
 
+            else:
+
+                if doctor.to_dict()["Password"]!=Password:
+                        return{
+                        'msg':"Invalid Password"
+                    }
 
     except Exception as e:
         print(e)
@@ -97,42 +96,171 @@ def getDocInfo():
 def forgotPassword():
     try:
         request_data=json.loads(request.data)
+        print(request_data)
         email=request_data[0]["Email"]
-        print(email)
-        doc_ref=db.collection(u'Doctors').where(u'Email',u'==',email)
-        doctor=doc_ref.get()[0]
-
-        if doctor.exists:
-            doc_email=doctor.to_dict()["Email"]
-            doc_id=doctor.to_dict()["Doctor_id"]
-            doc_id="d"+str(doc_id)
-            print(doc_email)
-            if doc_email==email:
-                print("All good")
-                new_pass=''.join(random.choices(string.ascii_uppercase+string.ascii_lowercase+string.digits, k=10))
-
-                msg = Message("Password Reset",
-                  sender="befinalproject420@gmail.com",
-                  recipients=["shreepad.divekar@gmail.com", "aditya02.apte@gmail.com"]
-                  )
-
-                msg.body="Your new password is "+new_pass
-
-                mail.send(msg)
-                print("mail sent successfully")
-
-                db.collection(u'Doctors').document(doc_id).update({"Password":new_pass})
-                print("Password updated successfully ")
-
+        id=request_data[1]["id"]
+        print(email, id)
+        if id=="d":
+            doc_ref=db.collection(u'Doctors').where(u'Email',u'==',email)
+            print("doc_ref", doc_ref)
+            doctor=None
+            if doc_ref.get()==[]:
                 return{
-                    "201":"Good"
+                    "msg":"Account Not Found"
                 }
 
+            if doc_ref.get()!=[]:
+                doctor=doc_ref.get()[0]
+                print("doctor", doctor)
+
+                if doctor.exists:
+                    doc_email=doctor.to_dict()["Email"]
+                    doc_id=doctor.to_dict()["Doctor_id"]
+                    doc_id="d"+str(doc_id)
+                    
+                    if doc_email==email:
+                       
+                        print("All good")
+                        new_otp=''.join(random.choices(string.digits, k=6))
+
+                        msg = Message("Opt for password change request",
+                        sender="befinalproject420@gmail.com",
+                        recipients=["shaden.shaden2704@gmail.com", "aditya02.apte@gmail.com"]
+                        )
+
+                        msg.body="Your new otp for "+doc_email+" is "+new_otp
+
+                        mail.send(msg)
+                        print("Otp mail for Doctor sent successfully")
+
+                        db.collection(u'Doctors').document(doc_id).update({"Doctor_otp":new_otp})
+                        print("Otp updated successfully ")
+
+                        return{
+                            "msg":"Otp sent Successfully"
+                        }
+
+        if id=="a":
+            admin_ref=db.collection(u'Admin').where(u'Admin_Email',u'==',email)
+            print("admin_ref", admin_ref)
+            if admin_ref.get()==[]:
+                return{
+                    "msg":"Account Not Found"
+                }
+
+            admin=admin_ref.get()[0]
+            if admin.exists:
+                admin_email=admin.to_dict()["Admin_Email"]
+                admin_id=admin.to_dict()["Admin_Id"]
+                admin_id="a"+str(admin_id)
+
+                if admin_email==email:
+                    print("All good")
+                    new_otp=''.join(random.choices(string.digits, k=6))
+
+                    msg = Message("Opt for password change request",
+                    sender="befinalproject420@gmail.com",
+                    recipients=["shaden.shaden2704@gmail.com", "aditya02.apte@gmail.com"]
+                    )
+
+                    msg.body="Your new otp for "+admin_email+" is "+new_otp
+
+                    mail.send(msg)
+                    print("Otp mail for Admin sent successfully")
+
+                    db.collection(u'Admin').document(admin_id).update({"Admin_otp":new_otp})
+                    print("Otp updated successfully ")
+
+                    return{
+                        "msg":"Otp sent Successfully"
+                    }
            
 
 
     except Exception as e:
         print(e)
+
+@app.route("/getOtp", methods=["GET", "POST"])
+def getOtp():
+    try:
+        request_data=json.loads(request.data)
+        print(request_data)
+        otp=request_data[0]["user_otp"]
+        identifier=request_data[1]["id"]
+        print(otp, identifier)
+        if identifier=="d":
+            doc_ref=db.collection(u'Doctors').where(u'Doctor_otp',u'==',otp)
+            print("doc_ref", doc_ref)
+            
+
+            if doc_ref.get()==[]:
+                return{
+                    "msg":"Invalid Otp"
+                }
+
+            doctor=doc_ref.get()[0]
+            
+
+            if doctor.exists:
+                doc_id="d"+str(doctor.to_dict()["Doctor_id"])
+                new_pass=''.join(random.choices(string.ascii_lowercase+string.ascii_uppercase+string.digits, k=10))
+                msg = Message("Password Reset",
+                        sender="befinalproject420@gmail.com",
+                        recipients=["shaden.shaden2704@gmail.com", "aditya02.apte@gmail.com"]
+                        )
+
+                msg.body="Your new password is "+new_pass
+
+                mail.send(msg)
+                print("Password mail for Doctor sent successfully")
+
+                db.collection(u'Doctors').document(doc_id).update({"Password":new_pass})
+                print("Password updated successfully ")
+
+                return{
+                    "msg":"Password Updated Successfully"
+                }
+
+        if identifier=="a":
+            admin_ref=db.collection(u'Admin').where(u'Admin_otp',u'==',otp)
+            print("admin_ref", admin_ref)
+            if admin_ref.get()==[]:
+                return{
+                    "msg":"Invalid Otp"
+                }
+
+            admin=admin_ref.get()[0]
+
+            if admin.exists:
+                admin_id="a"+str(admin.to_dict()["Admin_Id"])
+                new_pass=''.join(random.choices(string.ascii_lowercase+string.ascii_uppercase+string.digits, k=10))
+                msg = Message("Password Reset",
+                        sender="befinalproject420@gmail.com",
+                        recipients=["shaden.shaden2704@gmail.com", "aditya02.apte@gmail.com"]
+                        )
+
+                msg.body="Your new password is "+new_pass
+
+                mail.send(msg)
+                print("Password mail for Admin sent successfully")
+
+                db.collection(u'Admin').document(admin_id).update({"Password":new_pass})
+                print("Password updated successfully ")
+
+                return{
+                    "msg":"Password Updated Successfully"
+                }
+
+            # else:
+            #     return{
+            #         "msg":"Invvalid Otp"
+            #     }
+
+    except Exception as e:
+        print(e)
+        return{
+            "msg":str(e)
+        }
 
 @app.route('/resetPassword', methods=["POST", "GET"])
 def resetPassword():
@@ -173,7 +301,48 @@ def resetPassword():
 
 @app.route("/Adminpost", methods=["POST", "GET"])
 def getAdminInfo():
-    pass
+    try:
+        request_data=json.loads(request.data)
+        print(request_data)
+        Username=request_data["Username"]
+        Email=request_data["Email"]
+        Password=request_data["Password"]
+        print(Username,Email,Password)
+
+        admin_id='a1'
+        admin_ref=db.collection(u'Admin').document(admin_id)
+        admin=admin_ref.get()
+        if admin.exists:
+            if admin.to_dict()["Admin_Email"]==Email and admin.to_dict()["Admin_Password"]==Password:
+                return {
+                    'msg':'Admin Authenticated',
+                    'id':admin.to_dict()["Admin_Id"]
+                    }
+
+            else:
+                    if admin.to_dict()["Admin_Email"]!=Email: 
+                        return{
+                            'msg':"Invalid Email"
+                        }
+
+                    elif admin.to_dict()["Admin_Password"]!=Password:
+                         return{
+                            'msg':"Invalid Password"
+                        }
+
+        else:
+                return {
+                    'msg':"Admin not Found"
+                }
+
+
+
+
+    except Exception as e:
+        print(e)
+        return{
+            "msg":str(e)
+        }
 
 # firebaseConfig = {
 #     "apiKey": "AIzaSyBJ_zlvPhIGuV9eh_0Pf5a1JOsmxhoU08w",
@@ -188,3 +357,6 @@ def getAdminInfo():
 
 if __name__=="__main__":
     app.run(debug=True)
+
+
+    
