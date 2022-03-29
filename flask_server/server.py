@@ -1,3 +1,4 @@
+
 from flask import Flask, request, redirect,send_file
 import json
 import os
@@ -23,6 +24,7 @@ cred = credentials.Certificate('./private_key.json')
 firebase_admin.initialize_app(cred)
 db=firestore.client()
 
+
 # doc1={
 #     u"Name":u"Tatya Vinchu",
 #     u"Contact":27983454,
@@ -35,17 +37,36 @@ db=firestore.client()
 
 # db.collection(u'Counter').document(u'count').set({u"doctorCounter":1})
 
-# admin={
-#     u"Admin_Name":u"Deenanath Mangu",
-#     u"Admin_Email":u"Deenanath@gmail.com",
-#     u"Admin_Contact":123456789,
-#     u"Admin_Password":"Deenu#1234",
-#     u"Admin_Id":1
-
+# patient1={
+#     u"Name":u"Raju",
+#     u"Email":u"raju@gmail.com",
+#     u"Password":u"raju1234",
+#     u"Contact_Number":123456789,
+#     u"Doctor_id":1,
+#     u"Patient_id":1
 # }
 
-# db.collection(u'Admin').document(u'a1').set(admin)
+# patient2={
+#     u"Name":u"Mama",
+#     u"Email":u"mama@gmail.com",
+#     u"Password":u"mama1234",
+#     u"Contact_Number":123423435,
+#      u"Doctor_id":1,
+#      u"Patient_id":2
+# } 
 
+# patient3={
+#      u"Name":u"Lala",
+#     u"Email":u"lala@gmail.com",
+#     u"Password":u"lala1234",
+#     u"Contact_Number":8965896789,
+#      u"Doctor_id":1,
+#      u"Patient_id":3
+# }
+
+# db.collection(u'Patients').document(u'p1').set(patient1)
+# db.collection(u'Patients').document(u'p2').set(patient2)
+# db.collection(u'Patients').document(u'p3').set(patient3)
 
 
 @app.route("/Docpost", methods=["POST", "GET"])
@@ -343,6 +364,36 @@ def getAdminInfo():
         return{
             "msg":str(e)
         }
+
+@app.route("/getPatients", methods=["GET","POST"])
+def getPatients():
+    try:
+        patient_ref=db.collection(u'Patients').where(u'Doctor_id',u'==',1)
+        print("patient_ref",patient_ref)
+        if patient_ref.get()==[]:
+            return{
+                "patients":"Not Found"
+            }
+
+        print("Helloooo")
+        print("Viewing patients",patient_ref.get())
+        patients=[]
+
+        for i in range(len(patient_ref.get())):
+            name=patient_ref.get()[i].to_dict()["Name"]
+            id=patient_ref.get()[i].to_dict()["Patient_id"]
+            obj={
+                "name":name,
+                "id":id
+            }
+            patients.append(obj)
+
+        print("Patients",patients)
+        return json.dumps(patients)
+
+
+    except Exception as e:
+        print(str(e))
 
 # firebaseConfig = {
 #     "apiKey": "AIzaSyBJ_zlvPhIGuV9eh_0Pf5a1JOsmxhoU08w",

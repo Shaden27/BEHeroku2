@@ -37,7 +37,7 @@ function DoctorLogin({navigation}) {
         }).then(data=>{
             console.log(data)
             if(data['msg']=='Doctor Authenticated'){
-                navigate('DoctorDashboard')
+                navigate('Patients')
                
                 localStorage.setItem('Doc_id',"d"+data['id']);
                 

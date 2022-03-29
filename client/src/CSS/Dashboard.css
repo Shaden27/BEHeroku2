@@ -1,0 +1,19 @@
+.btn-outline-success{
+ margin-left: 10px;
+ margin-right: 50px;
+ padding-left: 15px;
+ padding-right: 15px;
+}
+
+
+.form-inline{
+    margin-left: 800px;
+}
+
+.form-control{
+   margin-right: 25px;
+}
+
+.nav-item{
+    margin-left: 15px;
+}

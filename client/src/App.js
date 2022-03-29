@@ -11,6 +11,7 @@ import ResetPassword from './Components/ResetPassword';
 import AdminDashboard from './Components/AdminDashboard';
 import PasswordResetSuccess from './Components/PasswordResetSuccess';
 import Otp from './Components/Otp';
+import Patients from './Components/Patients';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path='/admindashboard' element={<AdminDashboard></AdminDashboard>}></Route>
         <Route path='/passwordresetsuccess' element={<PasswordResetSuccess></PasswordResetSuccess>}></Route>
         <Route path='/otp' element={<Otp></Otp>}></Route>
+        <Route path='/patients' element={<Patients></Patients>}></Route>
       </Routes>
      
     </div>
