@@ -12,6 +12,7 @@ import AdminDashboard from './Components/AdminDashboard';
 import PasswordResetSuccess from './Components/PasswordResetSuccess';
 import Otp from './Components/Otp';
 import Patients from './Components/Patients';
+import Actualpatient from './Components/Actualpatient';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path='/passwordresetsuccess' element={<PasswordResetSuccess></PasswordResetSuccess>}></Route>
         <Route path='/otp' element={<Otp></Otp>}></Route>
         <Route path='/patients' element={<Patients></Patients>}></Route>
+        <Route path='/actualpatient' element={<Actualpatient></Actualpatient>}></Route>
       </Routes>
      
     </div>

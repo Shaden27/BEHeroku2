@@ -382,9 +382,11 @@ def getPatients():
         for i in range(len(patient_ref.get())):
             name=patient_ref.get()[i].to_dict()["Name"]
             id=patient_ref.get()[i].to_dict()["Patient_id"]
+            email=patient_ref.get()[i].to_dict()["Email"]
             obj={
                 "name":name,
-                "id":id
+                "id":id,
+                "email":email
             }
             patients.append(obj)
 
