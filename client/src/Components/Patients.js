@@ -69,13 +69,13 @@ function Patients() {
               ele.classList.remove('hover')
                console.log(i)
             }}>
-            <div className="col-sm-8" >
-            <h3 className='patient'>Name:</h3>
-             <h3 className='patient'>{patient.name}</h3>
+            <div className="col" >
+            {/* <h3 className='patient'>Name:</h3> */}
+             <h3 className='patient'>Name: {patient.name}</h3>
             </div>
-            <div className="col-sm-4" >
-              <h3 className='patient'>Email:</h3>
-              <h3 className='patient'>{patient.email}</h3>
+            <div className="col" >
+              {/* <h3 className='patient'>Email:</h3> */}
+              <h3 className='patient'>Email: {patient.email}</h3>
             </div>
             </div>
             </Link>

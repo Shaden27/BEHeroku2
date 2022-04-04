@@ -21,15 +21,15 @@
     background-color:darkgrey;
     margin-bottom: 12px;
     border-radius: 1rem;
+    border-style: solid;
+    border-color: black;
+    border-width: 1.5px;
+    justify-content: center;
 }
 
-.col-sm-4{
+.col{
     text-decoration: none;
     color: black;
-}
-
-.name{
-    align-content: flex-start;
 }
 
 .hover{

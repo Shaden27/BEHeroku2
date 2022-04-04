@@ -81,7 +81,7 @@ def getDocInfo():
         print(Username,Email,Password)
 
         doc_ref=db.collection(u'Doctors').where(u'Email',u'==',Email)
-        print(doc_ref)
+        print("Doc_ref",doc_ref)
         
         if doc_ref.get()==[]:
             return{
@@ -89,7 +89,7 @@ def getDocInfo():
             }
 
         doctor=doc_ref.get()[0]
-        print(doctor)
+        print("doctor",doctor)
         
         if doctor.exists:
             doc_id=doctor.to_dict()["Doctor_id"]
