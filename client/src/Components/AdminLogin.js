@@ -35,7 +35,7 @@ function AdminLogin() {
         })
         .then(data=>{
             if(data['msg']=='Admin Authenticated'){
-                navigate('/admindashboard')
+                navigate('/admincontrol', {state:{id:"a"}})
                 localStorage.setItem("Admin_id","a"+data['id'])
             }else{
                 console.log("Some Problem Occured")

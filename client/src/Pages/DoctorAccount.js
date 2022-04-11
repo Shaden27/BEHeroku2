@@ -1,7 +1,7 @@
 
 import React,{useState,useEffect} from 'react'
 import {useNavigate,Navigate,Link} from 'react-router-dom'
-import DoctorDashboard from '../Components/DoctorDashboard'
+import DoctorNavbar from '../Components/DoctorNavbar'
 
 function DoctorAccount() {
     const [flag, setFlag]=useState(false)
@@ -9,6 +9,7 @@ function DoctorAccount() {
 
     useEffect(()=>{
         if(localStorage.getItem('Doc_id')){
+            console.log("In doctor Account")
               console.log("Local storage exists")
               setFlag(true)
             }
@@ -26,7 +27,7 @@ const handleReset=()=>{
 
   return (
     <div>
-       <DoctorDashboard nameOf='doctorAccount'></DoctorDashboard>
+       <DoctorNavbar nameOf='doctorAccount'></DoctorNavbar>
         {flag ? (<div>
             <h2>This is the Account page</h2>
             

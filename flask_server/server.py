@@ -235,7 +235,7 @@ def getOtp():
                 mail.send(msg)
                 print("Password mail for Doctor sent successfully")
 
-                db.collection(u'Doctors').document(doc_id).update({"Password":new_pass})
+                db.collection(u'Doctors').document(doc_id).update({"Admin_Password":new_pass})
                 print("Password updated successfully ")
 
                 return{

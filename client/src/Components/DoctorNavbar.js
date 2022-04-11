@@ -4,10 +4,11 @@ import DoctorSidebar from './DoctorSidebar'
 import '../CSS/Dashboard.css'
 
 
-function DoctorDashboard(props) {
+function DoctorNavbar(props) {
   const navigate=useNavigate()
   const nameOf=props.nameOf
   console.log(nameOf)
+  console.log("In DoctorNavbar")
 
   
   const [classflag, setClassFlag]=useState(false)
@@ -36,9 +37,9 @@ function DoctorDashboard(props) {
    <div className="collapse navbar-collapse" id="navbarSupportedContent">
     <ul className="navbar-nav mr-auto">
       <li className="nav-item ">
-        <a className={classflag ? "nav-link":"nav-link active"} href="/patients">Patients</a>
+      <Link to={"/patients"} state={{id:"d"}} className={classflag ? "nav-link":"nav-link active"}>Patients</Link>
       </li>
-      <li className="nav-item active">
+      <li className="nav-item ">
         <a className={classflag ? "nav-link active":"nav-link"} href="/doctorAccount">Account</a>
       </li>
     </ul>
@@ -55,4 +56,4 @@ function DoctorDashboard(props) {
   )
 }
 
-export default DoctorDashboard
+export default DoctorNavbar

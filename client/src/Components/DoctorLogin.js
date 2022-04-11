@@ -37,11 +37,12 @@ function DoctorLogin({navigation}) {
         }).then(data=>{
             console.log(data)
             if(data['msg']=='Doctor Authenticated'){
-                navigate('Patients')
+               
                
                 localStorage.setItem('Doc_id',"d"+data['id']);
+          
+                navigate('/patients', {state:{id:"d"}})
                 
-              
             }else{
                 console.log("Some Problem Occured")
                 if(data['msg']=='Doctor Not Found'){
