@@ -6,7 +6,7 @@ import '../CSS/DoctorLogin.css'
 
 
 
-function DoctorLogin({navigation}) {
+function DoctorLogin() {
     const [emailmsg, setEmailmsg]=useState(false)
     const [passwordmsg, setPasswordmsg]=useState(false)
     const [emailflag, setEmailFlag]=useState(false)
@@ -14,7 +14,6 @@ function DoctorLogin({navigation}) {
   
     const navigate=useNavigate()
     const initialValues={
-        Username:"",
         Email:"",
         Password:""
     }
@@ -37,11 +36,8 @@ function DoctorLogin({navigation}) {
         }).then(data=>{
             console.log(data)
             if(data['msg']=='Doctor Authenticated'){
-               
-               
                 localStorage.setItem('Doc_id',"d"+data['id']);
-          
-                navigate('/patients', {state:{id:"d"}})
+                navigate('/doctorcontrol', {state:{id:"d"}})
                 
             }else{
                 console.log("Some Problem Occured")
@@ -70,10 +66,6 @@ function DoctorLogin({navigation}) {
     
     const validate=(values)=>{
         let errors={}
-        if(!values.Username){
-            errors.Username="Required"
-        }
-    
         if(!values.Email){
             errors.Email="Required"
         }else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.Email)){
@@ -98,14 +90,7 @@ function DoctorLogin({navigation}) {
            
            <form onSubmit={formik.handleSubmit}>
             
-             <h1 className="h3 mb-3 fw-normal">Please Sign In as Doctor</h1>
-             <div className="form-floating">
-                 <input type="text" name="Username" className="form-control" id="floatingUsername"
-                  placeholder="username" onChange={formik.handleChange} 
-                  value={formik.values.Username}  onBlur={formik.handleBlur}></input>
-                 <label htmlFor="floatingUsername">Username</label>
-                 {formik.touched.Username && formik.errors.Username ? (<div className='error_msg'>{formik.errors.Username}</div>):null}
-             </div>
+             <h1 className="h3 mb-3 fw-normal">Sign In As Doctor</h1>
          
              <div className="form-floating">
                <input type="email" name="Email" className="form-control" id="floatingInput" 

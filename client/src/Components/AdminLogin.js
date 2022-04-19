@@ -12,7 +12,6 @@ function AdminLogin() {
     const [passflag, setPassFlag]=useState(false)
 
     const initialValues={
-        Username:"",
         Email:"",
         Password:""
     }
@@ -64,10 +63,6 @@ function AdminLogin() {
     
     const validate=(values)=>{
         let errors={}
-        if(!values.Username){
-            errors.Username="Required"
-        }
-    
         if(!values.Email){
             errors.Email="Required"
         }else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.Email)){
@@ -92,15 +87,8 @@ function AdminLogin() {
            
            <form onSubmit={formik.handleSubmit}>
             
-             <h1 className="h3 mb-3 fw-normal">Please Sign In as Admin</h1>
-             <div className="form-floating">
-                 <input type="text" name="Username" className="form-control" id="floatingUsername"
-                  placeholder="username" onChange={formik.handleChange} 
-                  value={formik.values.Username}  onBlur={formik.handleBlur}></input>
-                 <label htmlFor="floatingUsername">Username</label>
-                 {formik.touched.Username && formik.errors.Username ? (<div className='error_msg'>{formik.errors.Username}</div>):null}
-             </div>
-         
+             <h1 className="h3 mb-3 fw-normal">Sign In As Admin</h1>
+           
              <div className="form-floating">
                <input type="email" name="Email" className="form-control" id="floatingInput" 
                placeholder="name@example.com"  onChange={formik.handleChange} 
@@ -119,7 +107,6 @@ function AdminLogin() {
                {passflag ? (<div className='error_msg'>Incorrect Password</div>):null}
              </div>
          
-             
              <button className="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
              <p className="mt-5 mb-3 text-muted">&copy; 2022-2024</p>
            </form>

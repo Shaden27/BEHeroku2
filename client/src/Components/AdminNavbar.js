@@ -26,7 +26,7 @@ function AdminNavbar(props) {
   const handleLogout=()=>{
     console.log("Logging out")
     localStorage.removeItem('Admin_id')
-    navigate('/')
+    navigate('/adminLogin')
 
 }
   return (
@@ -35,7 +35,6 @@ function AdminNavbar(props) {
    <div className="collapse navbar-collapse" id="navbarSupportedContent">
     <ul className="navbar-nav mr-auto">
       <li className="nav-item ">
-        {/* <a className={classflag ? "nav-link":"nav-link active"} href="/patients">Patients</a> */}
         <Link to={"/admincontrol"} state={{id:"a"}} className={classflag ? "nav-link":"nav-link active"}>Patients</Link>
       </li>
       <li className="nav-item">

@@ -1,26 +1,42 @@
 import React,{useState,useEffect} from 'react'
-import { useNavigate,Link } from 'react-router-dom'
+import { useNavigate,Link,useLocation} from 'react-router-dom'
 import {useFormik} from 'formik'
 import '../CSS/DoctorLogin.css'
 
 function ResetPassword() {
     const [flag,setFlag]=useState(false)
     const [flagForLocalStorage, setFlagForLocalStorage]=useState(false)
+    const [idToBeSent, setIdTBeSent]=useState(null);
+    const {id}=useLocation().state
     const navigate=useNavigate()
+
     const initialValues={
         oldPassword:"",
         newPassword:"",
         verifyPassword:""
     }
 
+    // console.log("id in resetpassword", id)
+
     useEffect(()=>{
-        if(localStorage.getItem('Doc_id')){
-            console.log("Local storage exists")
-            setFlagForLocalStorage(true)
-          }
+        var idToBeSent;
+        if(id == "d"){
+            if(localStorage.getItem('Doc_id')){
+                console.log("Local storage exists")
+                setIdTBeSent(localStorage.getItem('Doc_id'))
+                setFlagForLocalStorage(true)
+              }
+        }else if(id == "a"){
+            if(localStorage.getItem('Admin_id')){
+                setIdTBeSent(localStorage.getItem('Admin_id'))
+                setFlagForLocalStorage(true)
+            }
+        }
+        
 
     },[])
     const validate=(values)=>{
+        
         let errors={}       
         
         if(!values.oldPassword){
@@ -58,9 +74,8 @@ function ResetPassword() {
 
     const onSubmit=(values)=>{
         console.log(values)
-        const id=localStorage.getItem('id')
         const id_obj={
-            "id":id
+            "id":idToBeSent
         }
         const data=[values,id_obj]
         fetch('/resetPassword', {
@@ -79,7 +94,7 @@ function ResetPassword() {
         .then(data=>{
             if(data["msg"]=="Password updated successfully"){
                 console.log("Password updated successfully")
-                navigate('/doctordashboard')
+                navigate('/passwordresetsuccess')
             }else{
                 console.log("something went wrong")
             }

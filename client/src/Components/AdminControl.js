@@ -24,7 +24,7 @@ const handlePatientAdd=()=>{
         <h1 className='heading_patients'>Patients</h1>
         
         <button className='add btn btn-primary' onClick={handlePatientAdd}><AiIcons.AiOutlinePlus></AiIcons.AiOutlinePlus> Add</button>
-        <Patients></Patients>
+        <Patients id="a"></Patients>
     </div>
   )
 }

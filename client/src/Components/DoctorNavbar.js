@@ -37,7 +37,7 @@ function DoctorNavbar(props) {
    <div className="collapse navbar-collapse" id="navbarSupportedContent">
     <ul className="navbar-nav mr-auto">
       <li className="nav-item ">
-      <Link to={"/patients"} state={{id:"d"}} className={classflag ? "nav-link":"nav-link active"}>Patients</Link>
+      <Link to={"/doctorcontrol"} state={{id:"d"}} className={classflag ? "nav-link":"nav-link active"}>Patients</Link>
       </li>
       <li className="nav-item ">
         <a className={classflag ? "nav-link active":"nav-link"} href="/doctorAccount">Account</a>

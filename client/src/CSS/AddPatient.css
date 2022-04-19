@@ -1,0 +1,44 @@
+.containerAddPatient{
+    margin-top: 100px;
+    max-width: 1200px;
+    position: relative;
+    align-items: flex-start;
+  
+}
+
+.row2{
+    margin-top: 40px;
+}
+
+.row3{
+    margin-top: 40px;
+}
+
+.upload{
+    margin-top: 20px;
+}
+
+.containerAddPatient input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .error_msg{
+    color: red;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left:0px;
+  }
+
+  .submit{
+      width: 200px;
+      margin-top: 50px;
+      max-width: 200px;
+  }
+
+
+  .img{
+      width: 150px;
+      height: 150px;
+  }

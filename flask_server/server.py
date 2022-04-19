@@ -1,5 +1,6 @@
 
 from flask import Flask, request, redirect,send_file
+from werkzeug.utils import secure_filename
 import json
 import os
 import firebase_admin
@@ -75,10 +76,9 @@ def getDocInfo():
         print('Request data',request.data)
         request_data=json.loads(request.data)
         print(request_data)
-        Username=request_data["Username"]
         Email=request_data["Email"]
         Password=request_data["Password"]
-        print(Username,Email,Password)
+        print(Email,Password)
 
         doc_ref=db.collection(u'Doctors').where(u'Email',u'==',Email)
         print("Doc_ref",doc_ref)
@@ -291,44 +291,71 @@ def resetPassword():
         oldPassword=request_data[0]["oldPassword"]
         newPassword=request_data[0]["newPassword"]
         verifyPassword=request_data[0]["verifyPassword"]
-        doc_id=request_data[1]["id"]
+        id=request_data[1]["id"]
 
-        print(oldPassword, newPassword, verifyPassword,doc_id )
+        letter=id[:1]
+        doc_num=id[1:]
+        doc_num=int(doc_num)
 
-        doc_ref=db.collection(u'Doctors').document(doc_id)
-        doctor=doc_ref.get()
+        print(oldPassword, newPassword, verifyPassword,id )
 
-        if doctor.exists:
-            if doctor.to_dict()["Password"]==oldPassword:
-                db.collection(u'Doctors').document(doc_id).update({"Password":newPassword})
-                return{
-                    "msg":"Password updated successfully"
+        if letter=="d":
+
+            doc_ref=db.collection(u'Doctors').where(u'Doctor_id',u'==',doc_num)
+            if doc_ref.get()==[]:
+                return {
+                    "msg":"Account Not Found"
                 }
 
-            else:
-                return{
-                    "msg":"Some error occured please try again"
+            doctor=doc_ref.get()[0]
+
+            if doctor.exists:
+                if doctor.to_dict()["Password"]==oldPassword:
+                    db.collection(u'Doctors').document(id).update({"Password":newPassword})
+                    return{
+                        "msg":"Password updated successfully"
+                    }
+
+                else:
+                    return{
+                        "msg":"Some error occured please try again"
+                    }
+
+        if letter=="a":
+            admin_ref=db.collection(u'Admin').where(u'Admin_Id',u'==',1)
+            if admin_ref.get()==[]:
+                return {
+                    'msg':'Account Not Found'
                 }
 
-        return{
-            "msg":"Something went wrong"
-        }
+            admin=admin_ref.get()[0]
+            if admin.exists:
+                if admin.to_dict()["Admin_Password"]==oldPassword:
+                    db.collection(u'Admin').document(u"a1").update({"Admin_Password":newPassword})
+                    return{
+                        "msg":"Password updated successfully"
+                    }
+
+                else:
+                    return{
+                        "msg":"Some error occured please try again"
+                    }
+
         
        
     except Exception as e:
         print(e)
    
 
-
 @app.route("/Adminpost", methods=["POST", "GET"])
 def getAdminInfo():
     try:
         request_data=json.loads(request.data)
         print(request_data)
-        Username=request_data["Username"]
+    
         Email=request_data["Email"]
         Password=request_data["Password"]
-        print(Username,Email,Password)
+        print(Email,Password)
 
         admin_id='a1'
         admin_ref=db.collection(u'Admin').document(admin_id)
@@ -368,35 +395,111 @@ def getAdminInfo():
 @app.route("/getPatients", methods=["GET","POST"])
 def getPatients():
     try:
-        patient_ref=db.collection(u'Patients').where(u'Doctor_id',u'==',1)
-        print("patient_ref",patient_ref)
-        if patient_ref.get()==[]:
-            return{
-                "patients":"Not Found"
-            }
+        id=request.form['id']
+        print("id", id)
+        letter=id[:1]
+        doc_num=id[1:]
 
-        print("Helloooo")
-        print("Viewing patients",patient_ref.get())
-        patients=[]
+        doc_num=int(doc_num)
+        print(letter,doc_num)
+        if letter == 'd':
+            patient_ref=db.collection(u'Patients').where(u'Doctor_id',u'==',doc_num)
+            print("patient_ref",patient_ref)
+            print(patient_ref.get())
+            if patient_ref.get()==[]:
+                return{
+                    "patients":"Not Found"
+                }
 
-        for i in range(len(patient_ref.get())):
-            name=patient_ref.get()[i].to_dict()["Name"]
-            id=patient_ref.get()[i].to_dict()["Patient_id"]
-            email=patient_ref.get()[i].to_dict()["Email"]
-            obj={
-                "name":name,
-                "id":id,
-                "email":email
-            }
-            patients.append(obj)
+            print("Helloooo")
+            print("Viewing patients",patient_ref.get())
+            patients=[]
 
-        print("Patients",patients)
-        return json.dumps(patients)
+            for i in range(len(patient_ref.get())):
+                name=patient_ref.get()[i].to_dict()["Name"]
+                id=patient_ref.get()[i].to_dict()["Patient_id"]
+                email=patient_ref.get()[i].to_dict()["Email"]
+                obj={
+                    "name":name,
+                    "id":id,
+                    "email":email
+                }
+                patients.append(obj)
+
+            print("Patients",patients)
+            return json.dumps(patients)
+
+        elif letter == "a":
+            admin_ref=db.collection(u'Patients')
+            print(admin_ref)
+
+            if admin_ref.get()==[]:
+                return{
+                    "patients":"Not Found"
+                }
+
+            patients=[]
+            for i in range(len(admin_ref.get())):
+                name=admin_ref.get()[i].to_dict()["Name"]
+                id=admin_ref.get()[i].to_dict()["Patient_id"]
+                email=admin_ref.get()[i].to_dict()["Email"]
+                obj={
+                    "name":name,
+                    "id":id,
+                    "email":email
+                }
+                patients.append(obj)
+
+            print("Patients",patients)
+            return json.dumps(patients)
 
 
     except Exception as e:
         print(str(e))
 
+UPLOAD_FOLDER = "./"
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+@app.route("/addPatient", methods=["GET", "POST"])
+def addPatient():
+    try:
+        target=os.path.join(UPLOAD_FOLDER,'test_docs')
+        if not os.path.isdir(target):
+            os.mkdir(target)
+        
+        Photo=request.files['Photo']
+        Name=request.form["Name"]
+        Email=request.form["Email"]
+        Doctor_Email=request.form["Doctor_Email"]
+        Contact=request.form["Contact"]
+        
+
+        # image=Photo.files['file']
+
+        print(Name, Email, Doctor_Email, Contact)
+        print("Photo type", type(Photo))
+        print("Photo", Photo)
+        filename = secure_filename(Photo.filename)
+        destination="/".join([target, filename])
+        Photo.save(destination)
+
+        patient={
+            u'Name':Name,
+            u'Email':Email,
+            u'Doctor_Email':Doctor_Email,
+            u'Contact':Contact,
+            u'Photo':Photo
+        }
+        
+        # print(image)
+
+        return{
+            "msg":"Good"
+        }
+        # print("Photo", Photo)
+
+    except Exception as e:
+        print(str(e))
 # firebaseConfig = {
 #     "apiKey": "AIzaSyBJ_zlvPhIGuV9eh_0Pf5a1JOsmxhoU08w",
 #     "authDomain": "be-final-project.firebaseapp.com",

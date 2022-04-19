@@ -21,7 +21,7 @@ function DoctorAccount() {
 
 const handleReset=()=>{
   console.log("Resetting password")
-  navigate('/resetPassword')
+  navigate('/resetPassword', {state:{id:"d"}})
 
 }
 

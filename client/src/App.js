@@ -16,6 +16,7 @@ import DoctorNavbar from './Components/DoctorNavbar';
 import AdminNavbar from './Components/AdminNavbar';
 import AdminControl from './Components/AdminControl';
 import AddPatient from './Components/AddPatient';
+import DoctorControl from './Components/DoctorControl';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
         <Route path='/adminAccount' element={<AdminAccount></AdminAccount>}></Route>
         <Route path='/admincontrol' element={<AdminControl></AdminControl>}></Route>
         <Route path='/addpatient' element={<AddPatient></AddPatient>}></Route>
+        <Route path='doctorcontrol' element={<DoctorControl></DoctorControl>}></Route>
       </Routes>
      
     </div>

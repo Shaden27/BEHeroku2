@@ -10,14 +10,14 @@
     text-decoration:none;
 }
 
-.container{
+.containerPatient{
     margin-top: 60px;
     position: relative;
    max-width: 100%;
           
 }
 
-.row{
+.rowPatient{
     background-color:darkgrey;
     margin-bottom: 12px;
     border-radius: 1rem;
@@ -27,7 +27,7 @@
     justify-content: center;
 }
 
-.col{
+.colPatient{
     text-decoration: none;
     color: black;
 }
