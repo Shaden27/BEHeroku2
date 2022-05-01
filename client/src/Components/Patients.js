@@ -11,16 +11,18 @@ function Patients() {
   const [flag, setFlag]=useState(false)
   const [data, setData]=useState([{}])
   
+  console.log("id",id)
   
-  console.log("id",id)  
+
+  
 
   useEffect(()=>{
     let mounted=true;
     let idToBeSent;
     if (id == "d"){
       if(localStorage.getItem('Doc_id')){
-        idToBeSent=localStorage.getItem('Doc_id')
-        console.log("Local storage exists")
+       idToBeSent=localStorage.getItem('Doc_id')
+      console.log("Local storage exists")
         setFlag(true)
       }
     }else{
@@ -30,7 +32,8 @@ function Patients() {
         setFlag(true)
       }
     }
-   
+    
+    
     const formdata=new FormData()
     formdata.append('id', idToBeSent)
       fetch("/getPatients",{
@@ -69,7 +72,7 @@ function Patients() {
         {flag ? <div> 
           <div className='container containerPatient'>
           {(data.length === 0) ? <div><h2>No Patients</h2></div> :<div>{data.map((patient,i)=>
-           <Link className='link' to='/actualpatient' key={i}>
+           <Link className='link' to={'/actualpatient'} state={{id:patient.email}} key={i}>
             <div className='row rowPatient' id={i} onMouseEnter={()=>{
               let ele=document.getElementById(i)
 

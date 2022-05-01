@@ -49,6 +49,11 @@ function AddPatient() {
         })
         .then(data=>{
           console.log(data)
+          if (data['msg']=="Good"){
+            console.log("success")
+          }else{
+            console.log("Something went wrong!!")
+          }
         })
 
     }
@@ -112,7 +117,7 @@ function AddPatient() {
     })
   return (
     <div>
-        <h2>Time to add a patient</h2>
+        <h2>Add a Patient</h2>
     
         
           <form onSubmit={formik.handleSubmit}>

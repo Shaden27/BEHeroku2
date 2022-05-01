@@ -1,5 +1,8 @@
 
-from flask import Flask, request, redirect,send_file
+
+from fileinput import filename
+from multiprocessing.dummy import Process
+from flask import Flask, request, redirect,send_file,jsonify,send_from_directory,render_template
 from werkzeug.utils import secure_filename
 import json
 import os
@@ -11,8 +14,12 @@ from flask_mail import Mail
 from flask_mail import Message
 import random
 import string
+import base64
+from model import *
 
 app=Flask(__name__)
+# print(process.env.PORT)
+# app.set(process.env.PORT or 5000)
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
@@ -395,6 +402,7 @@ def getAdminInfo():
 @app.route("/getPatients", methods=["GET","POST"])
 def getPatients():
     try:
+        print("Getting the patients")
         id=request.form['id']
         print("id", id)
         letter=id[:1]
@@ -417,11 +425,9 @@ def getPatients():
 
             for i in range(len(patient_ref.get())):
                 name=patient_ref.get()[i].to_dict()["Name"]
-                id=patient_ref.get()[i].to_dict()["Patient_id"]
                 email=patient_ref.get()[i].to_dict()["Email"]
                 obj={
                     "name":name,
-                    "id":id,
                     "email":email
                 }
                 patients.append(obj)
@@ -441,11 +447,10 @@ def getPatients():
             patients=[]
             for i in range(len(admin_ref.get())):
                 name=admin_ref.get()[i].to_dict()["Name"]
-                id=admin_ref.get()[i].to_dict()["Patient_id"]
+
                 email=admin_ref.get()[i].to_dict()["Email"]
                 obj={
                     "name":name,
-                    "id":id,
                     "email":email
                 }
                 patients.append(obj)
@@ -483,23 +488,154 @@ def addPatient():
         destination="/".join([target, filename])
         Photo.save(destination)
 
-        patient={
-            u'Name':Name,
-            u'Email':Email,
-            u'Doctor_Email':Doctor_Email,
-            u'Contact':Contact,
-            u'Photo':Photo
-        }
-        
-        # print(image)
+        doc_ref=db.collection(u'Doctors').where(u'Email',u'==',Doctor_Email)
+        if doc_ref.get()==[]:
+            return{
+                'msg':'Doctor Not Found'
+            }
 
-        return{
-            "msg":"Good"
-        }
-        # print("Photo", Photo)
+
+        doctor=doc_ref.get()[0]
+        if doctor.exists:
+            doc_id=doctor.to_dict()["Doctor_id"]
+
+            with open(destination, 'rb') as img_file:
+                patient_photo=base64.b64encode(img_file.read())
+
+            # print(my_string)
+
+            patient={
+                u'Name':Name,
+                u'Email':Email,
+                u'Doctor_Email':Doctor_Email,
+                u'Contact':Contact,
+                u'Doctor_id':doc_id,
+                u'Photo':patient_photo
+            }
+        
+            db.collection(u'Patients').document(Email).set(patient)
+
+            # image=base64.b64decode(patient_photo)
+            # print(image)
+            # newfile='new_mani.jpeg'
+            # destination="/".join([target,newfile])
+            # with open(destination, 'wb') as new_image:
+            #     new_image.write(image)
+          
+
+            return{
+                "msg":"Good"
+            }
+       
 
     except Exception as e:
         print(str(e))
+
+
+@app.route("/getPatientInfo", methods=["POST","GET"])
+def getPatientInfo():
+    try:
+        request_data=json.loads(request.data)
+        print(request_data)
+        email=request_data["id"]
+        whatType=request_data["forwhat"]
+        print("email",email)
+
+        patient_ref=db.collection(u'Patients').where(u'Email',u'==',email)
+        if patient_ref.get()==[]:
+            return {
+                'msg':'No Patient Found'
+            }
+
+        patient=patient_ref.get()[0]
+        print("patient",patient)
+        if patient.exists:
+            if whatType=="otherInfo":
+                Contact=patient.to_dict()['Contact']
+                Name=patient.to_dict()['Name']
+                Email=patient.to_dict()['Email']
+                Doctor_Email=patient.to_dict()['Doctor_Email']
+                 
+                patient_obj={
+                    'contact':Contact,
+                    'name':Name,
+                    'email':Email,
+                    'doctor_email':Doctor_Email
+                
+                }
+
+                return jsonify(patient_obj)
+
+            if whatType=="photo":
+                print("Trying to send photo ")
+                photo_url=patient.to_dict()["Photo"]
+
+                image=base64.b64decode(photo_url)
+                newfile="new_image.jpeg"
+                target=os.path.join(UPLOAD_FOLDER,'test_docs')
+                destination="/".join([target,newfile])
+                with open(destination, 'wb') as new_image:
+                    new_image.write(image)
+                
+                print("destination", destination)
+                return send_file(destination, as_attachment=True)
+
+
+    except Exception as e:
+        print(str(e))
+
+
+@app.route("/uploadScan", methods=["POST","GET"])
+def uploadScan():
+    try:
+        print("Test123")
+        target=os.path.join(UPLOAD_FOLDER,'test_docs')
+        if not os.path.isdir(target):
+            os.mkdir(target)
+
+        Scan=request.files['scan']
+        print("file",Scan)
+
+        filename = secure_filename(Scan.filename)
+        destination="/".join([target, filename])
+        Scan.save(destination)
+
+        
+
+        model=load_model()
+        output,input,display_input=run_inference(destination,model)
+        generate_input_gif(display_input, 'test_docs/input.gif')
+
+        combine_outputs(output, input, 'test_docs/bamboo.gif')
+        #save_image('test_docs/bamboozle.gif',output.numpy(), 3)
+        #generate_gif(output.numpy(),'test_docs/bamboozle.gif')
+        #save_image('test_docs/input.png',input.squeeze(), 4)
+
+        return {
+            "msg":"Success"
+        }
+
+    except Exception as e:
+        print(str(e))
+        return {
+            "msg":"Something went wrong"
+        }
+
+@app.route("/sendScan", methods=["POST","GET"])
+def sendScan1():
+    print("Hello in sendscan")
+    try:
+        print("In sendscan")
+        target=os.path.join(UPLOAD_FOLDER,'test_docs')
+        destination="/".join([target,'bamboo.gif'])
+        print("destination",destination)
+        return send_file(destination, as_attachment=True)
+      
+
+
+    except Exception as e:
+        print(str(e))
+
 # firebaseConfig = {
 #     "apiKey": "AIzaSyBJ_zlvPhIGuV9eh_0Pf5a1JOsmxhoU08w",
 #     "authDomain": "be-final-project.firebaseapp.com",

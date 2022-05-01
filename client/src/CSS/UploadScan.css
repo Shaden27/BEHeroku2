@@ -1,0 +1,36 @@
+.submit{
+    margin-top: 100px;
+}
+
+.upload{
+    margin-top: 100px;
+}
+
+.heading_uploadscan{
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.msgdiv{
+    border-style: solid;
+    border-color: black;
+    border-width: 2.0px;
+    height: 100px;
+    width: 300px;
+    margin-top: 80px;
+    margin-left: auto;
+    margin-right: auto;
+    
+
+
+}
+
+.error_msg{
+    color: red;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left:0px;
+}
+.mydiv{
+    /* background-image: url("https://www.google.com/imgres?imgurl=https%3A%2F%2Fak.picdn.net%2Fshutterstock%2Fvideos%2F8832190%2Fthumb%2F1.jpg&imgrefurl=https%3A%2F%2Fwww.shutterstock.com%2Fvideo%2Fclip-8832190-medical-background-video-showing-mri-neurons-charts&tbnid=BZoE5Tviu8iAVM&vet=12ahUKEwiTjr_Jzrn3AhUxiNgFHa5sAqcQMygYegUIARCcAg..i&docid=SY6lTI_MOONa7M&w=852&h=480&q=mri%20background%20images&ved=2ahUKEwiTjr_Jzrn3AhUxiNgFHa5sAqcQMygYegUIARCcAg"); */
+}

@@ -17,6 +17,8 @@ import AdminNavbar from './Components/AdminNavbar';
 import AdminControl from './Components/AdminControl';
 import AddPatient from './Components/AddPatient';
 import DoctorControl from './Components/DoctorControl';
+import UploadScan from './Components/UploadScan';
+import ShowScans from './Components/ShowScans';
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
         <Route path='/admincontrol' element={<AdminControl></AdminControl>}></Route>
         <Route path='/addpatient' element={<AddPatient></AddPatient>}></Route>
         <Route path='doctorcontrol' element={<DoctorControl></DoctorControl>}></Route>
+        <Route path='/uploadscan' element={<UploadScan></UploadScan>}></Route>
+        <Route path='showscans' element={<ShowScans></ShowScans>}></Route>
       </Routes>
      
     </div>
