@@ -26,7 +26,7 @@ function AdminNavbar(props) {
   const handleLogout=()=>{
     console.log("Logging out")
     localStorage.removeItem('Admin_id')
-    navigate('/adminLogin')
+    navigate('/')
 
 }
   return (

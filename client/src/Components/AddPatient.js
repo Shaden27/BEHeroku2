@@ -1,11 +1,13 @@
 import React,{useState,useEffect, useRef} from 'react'
 import {useFormik} from 'formik'
+import {useNavigate} from 'react-router-dom'
 import '../CSS/AddPatient.css'
 
 function AddPatient() {
   const [profileImg, setProfileImg]=useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png")
   const [file, setFile]=useState(null)
   const imageRef=useRef(null)
+  const navigate=useNavigate()
       const initialValues={
         Name:"",
         Email:"",
@@ -51,6 +53,7 @@ function AddPatient() {
           console.log(data)
           if (data['msg']=="Good"){
             console.log("success")
+            navigate('/addPatientSuccess')
           }else{
             console.log("Something went wrong!!")
           }
@@ -167,7 +170,7 @@ function AddPatient() {
                 </div>
 
               <input type='file' className='image-input' ref={imageRef} name='photo' accept='image/*' onChange={imagehandler} hidden></input>
-              <button type='button' className=' upload btn btn-secondary' onClick={()=>{
+              <button type='button' className='   btn btn-secondary' onClick={()=>{
                 imageRef.current.click()
               }}>Upload Photo</button>
 

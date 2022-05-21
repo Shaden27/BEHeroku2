@@ -19,6 +19,7 @@ import AddPatient from './Components/AddPatient';
 import DoctorControl from './Components/DoctorControl';
 import UploadScan from './Components/UploadScan';
 import ShowScans from './Components/ShowScans';
+import AddPatientSuccess from './Components/AddPatientSuccess';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
         <Route path='doctorcontrol' element={<DoctorControl></DoctorControl>}></Route>
         <Route path='/uploadscan' element={<UploadScan></UploadScan>}></Route>
         <Route path='showscans' element={<ShowScans></ShowScans>}></Route>
+        <Route path='addPatientSuccess' element={<AddPatientSuccess></AddPatientSuccess>}></Route>
       </Routes>
      
     </div>

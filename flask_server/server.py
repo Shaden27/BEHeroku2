@@ -1,7 +1,5 @@
 
-
 from fileinput import filename
-from multiprocessing.dummy import Process
 from flask import Flask, request, redirect,send_file,jsonify,send_from_directory,render_template
 from werkzeug.utils import secure_filename
 import json
@@ -34,16 +32,25 @@ db=firestore.client()
 
 
 # doc1={
-#     u"Name":u"Tatya Vinchu",
+#     u"Name":u"John",
 #     u"Contact":27983454,
-#     u"Email":u"Tatya@123.com",
-#     u"Password":u"Tatya123",
+#     u"Email":u"John@123.com",
+#     u"Password":u"John123",
 #     u"Doctor_id":1
 # }
 
-# db.collection(u'Doctors').document(u'd1').set(doc1)
+# doc2={
+#     u"Name":u"Steve",
+#     u"Contact":348937853,
+#     u"Email":u"Steve@123.com",
+#     u"Password":u"Steve123",
+#     u"Doctor_id":2
+# }
 
-# db.collection(u'Counter').document(u'count').set({u"doctorCounter":1})
+# db.collection(u'Doctors').document(u'd1').set(doc1)
+# db.collection(u'Doctors').document(u'd2').set(doc2)
+
+
 
 # patient1={
 #     u"Name":u"Raju",
@@ -606,7 +613,7 @@ def uploadScan():
         output,input,display_input=run_inference(destination,model)
         generate_input_gif(display_input, 'test_docs/input.gif')
 
-        combine_outputs(output, input, 'test_docs/bamboo.gif')
+        combine_outputs(output, input, 'test_docs/output.gif')
         #save_image('test_docs/bamboozle.gif',output.numpy(), 3)
         #generate_gif(output.numpy(),'test_docs/bamboozle.gif')
         #save_image('test_docs/input.png',input.squeeze(), 4)
@@ -627,9 +634,17 @@ def sendScan1():
     try:
         print("In sendscan")
         target=os.path.join(UPLOAD_FOLDER,'test_docs')
-        destination="/".join([target,'bamboo.gif'])
-        print("destination",destination)
-        return send_file(destination, as_attachment=True)
+        typeOf=request.form['type']
+       
+        if typeOf=="input":
+            destination="/".join([target,'input.gif'])
+            print("destination",destination)
+            return send_file(destination, as_attachment=True)
+
+        elif typeOf=="output":
+            destination="/".join([target,'output.gif'])
+            print("destination",destination)
+            return send_file(destination, as_attachment=True)
       
 
 
@@ -651,4 +666,4 @@ if __name__=="__main__":
     app.run(debug=True)
 
 
-    
+# https://shreepadtest.herokuapp.com/

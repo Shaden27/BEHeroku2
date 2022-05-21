@@ -7,14 +7,14 @@
 
 
 .title{
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 40px;
+    /* font-family: 'Times New Roman', Times, serif;*/
+    font-size: 40px; 
 }
 
 .name{
     margin-top: -40px;
     display: flex;
-    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     font-size: 30px;
 
 }
@@ -22,7 +22,7 @@
 .email{
     margin-top: -40px;
     display: flex;
-    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     font-size: 30px;
     margin-left: -50px;
 }
@@ -33,14 +33,14 @@
 .contact{
     margin-top: -40px;
     display: flex;
-    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     font-size: 30px;
 }
 
 .doc_email{
     margin-top: -45px;
     display: flex;
-    font-family: 'Times New Roman', Times, serif;
+    /* font-family: 'Times New Roman', Times, serif; */
     font-size: 30px;
 }
 
