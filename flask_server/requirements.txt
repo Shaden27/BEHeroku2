@@ -1,0 +1,15 @@
+array2gif==1.0.4
+firebase_admin==5.2.0
+Flask==2.1.2
+Flask_Mail==0.9.1
+matplotlib==3.5.2
+monai==0.8.1
+monai_weekly==0.9.dev2221
+moviepy==1.0.3
+nibabel==3.2.2
+numpy==1.22.4
+Pillow==9.1.1
+pyrebase==3.0.27
+Pyrebase4==4.5.0
+torch==1.11.0
+Werkzeug==2.1.2
