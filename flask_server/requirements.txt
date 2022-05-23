@@ -1,3 +1,4 @@
+-f https://download.pytorch.org/whl/torch_stable.html
 array2gif==1.0.4
 firebase_admin==5.2.0
 Flask==2.1.2
